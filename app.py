@@ -116,18 +116,30 @@ if selected_companies:
         st.markdown(f"**{company}:** {insights[company]}")
 
 # -------------------------------
-# Export as PNG
+# Export Options
 # -------------------------------
 st.subheader("Export Options")
 
-buffer = io.BytesIO()
-fig.write_image(buffer, format="png")
+# Export as HTML (interactive)
+fig_json = fig.to_json()
 st.download_button(
-    label="📥 Download Radar Chart as PNG",
-    data=buffer,
-    file_name=f"value_curve_{scenario}.png",
-    mime="image/png"
+    label="📥 Download Radar Chart (Interactive HTML)",
+    data=fig_json,
+    file_name=f"value_curve_{scenario}.html",
+    mime="application/json"
 )
+
+# Export as CSV (scores)
+import pandas as pd
+if selected_companies:
+    export_data = pd.DataFrame({c: scores[c] for c in selected_companies}, index=dimensions)
+    csv = export_data.to_csv().encode("utf-8")
+    st.download_button(
+        label="📥 Download Data as CSV",
+        data=csv,
+        file_name=f"value_curve_scores_{scenario}.csv",
+        mime="text/csv"
+    )
 
 # -------------------------------
 # Footer
