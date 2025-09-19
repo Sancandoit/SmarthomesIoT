@@ -64,12 +64,19 @@ selected_companies = [c for c in companies if st.sidebar.checkbox(c, True)]
 # -------------------------------
 # Radar Chart with Improved Colors
 # -------------------------------
-# Distinct colors for visibility (aligned with PPT palette, plus yellow & red for contrast)
+# Define RGBA colors for transparency
 colors = {
-    "Xiaomi": "#2F80ED",       # Bright Blue
-    "Ecobee": "#27AE60",       # Green
-    "iSmartHome": "#F2C94C",   # Yellow-Gold
-    "Tuya": "#EB5757"          # Red
+    "Xiaomi": "rgba(47,128,237,0.5)",     # Blue
+    "Ecobee": "rgba(39,174,96,0.5)",      # Green
+    "iSmartHome": "rgba(242,201,76,0.5)", # Yellow-Gold
+    "Tuya": "rgba(235,87,87,0.5)"         # Red
+}
+
+line_colors = {
+    "Xiaomi": "rgb(47,128,237)",
+    "Ecobee": "rgb(39,174,96)",
+    "iSmartHome": "rgb(242,201,76)",
+    "Tuya": "rgb(235,87,87)"
 }
 
 fig = go.Figure()
@@ -79,8 +86,8 @@ for company in selected_companies:
         r=companies[company] + [companies[company][0]],  # close loop
         theta=dimensions + [dimensions[0]],
         fill='toself',
-        fillcolor=colors[company] + "33",   # Add transparency (~20%)
-        line=dict(color=colors[company], width=3),
+        fillcolor=colors[company],   # semi-transparent fill
+        line=dict(color=line_colors[company], width=3),
         name=company
     ))
 
