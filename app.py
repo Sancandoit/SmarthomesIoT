@@ -116,6 +116,35 @@ if selected_companies:
         st.markdown(f"**{company}:** {insights[company]}")
 
 # -------------------------------
+# Company Readiness Heatmap
+# -------------------------------
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+st.subheader("Company Readiness Heatmap")
+
+# Sample readiness scores (1–10 scale)
+readiness_data = pd.DataFrame({
+    "Compliance": [9, 8, 6, 5],
+    "Ecosystem": [8, 7, 9, 5],
+    "Energy": [7, 9, 6, 6],
+    "Interoperability": [10, 8, 6, 5],
+    "Scalability": [8, 7, 9, 4]
+}, index=["Tuya", "Ecobee", "Xiaomi", "iSmartHome"])
+
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.heatmap(readiness_data, annot=True, cmap="YlGnBu", linewidths=.5, ax=ax)
+st.pyplot(fig)
+
+st.markdown("""
+**Interpretation:**  
+- Tuya and Ecobee show high readiness due to compliance, interoperability, and energy services.  
+- Xiaomi is medium — strong in affordability and ecosystem breadth but hardware-heavy.  
+- iSmartHome is medium-low, innovative locally but struggling with scale.  
+""")
+
+# -------------------------------
 # Export Options
 # -------------------------------
 st.subheader("Export Options")
