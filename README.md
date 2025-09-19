@@ -1,16 +1,11 @@
-# Smart Homes & IoT Value Curve Visualizer
+# Smart Homes & IoT – E-Business Strategy (Group 6)
 
-An interactive Streamlit app to compare companies in the Smart Home & IoT industry  
-(Xiaomi, Ecobee, iSmartHome, Tuya) across six benefit dimensions:
+Interactive Streamlit app supporting our MBA presentation.
 
-- Affordability
-- Energy Savings
-- Security
-- Interoperability
-- Ecosystem Breadth
-- Personalization
-
-## 🚀 Live Demo
-Deploy on [Streamlit Cloud](https://streamlit.io/cloud) by connecting this repo.
-
-## 📂 Project Structure
+## Pages
+- ICT External Analysis (PESTEL)
+- Value Curve Visualizer
+- Company Readiness Heatmap
+- Value Networks
+- Business Model Transformation
+- Future Outlook 2030
