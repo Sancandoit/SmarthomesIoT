@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
+import io
 
 # -------------------------------
 # Page Config
@@ -19,52 +20,55 @@ st.markdown(
     - Pritish Kumar Dhal  
     - Soniya Arunkumar  
     - Chandraveer Singh  
-    """
-)
 
-st.markdown(
-    """
-    This interactive tool compares **Xiaomi, Ecobee, iSmartHome, and Tuya**  
-    across six benefit dimensions customers care about:  
-    - Affordability  
-    - Energy Savings  
-    - Security  
-    - Interoperability  
-    - Ecosystem Breadth  
-    - Personalization  
+    ---
+    Compare **Xiaomi, Ecobee, iSmartHome, and Tuya** across six customer benefit dimensions.  
+    Toggle companies in the sidebar, switch scenarios (2024 vs. 2030), and download the chart.
     """
 )
 
 # -------------------------------
-# Dimensions & Scores
+# Dimensions
 # -------------------------------
 dimensions = [
-    "Affordability", 
-    "Energy Savings", 
-    "Security", 
-    "Interoperability", 
-    "Ecosystem Breadth", 
+    "Affordability",
+    "Energy Savings",
+    "Security",
+    "Interoperability",
+    "Ecosystem Breadth",
     "Personalization"
 ]
 
-# Example scores (scale 1–10)
-companies = {
+# -------------------------------
+# Company Scores (2024 vs. 2030)
+# -------------------------------
+scores_2024 = {
     "Xiaomi": [9, 6, 5, 6, 9, 5],
     "Ecobee": [6, 9, 7, 8, 7, 8],
     "iSmartHome": [7, 7, 6, 5, 6, 7],
     "Tuya": [8, 8, 7, 10, 8, 7]
 }
 
-# -------------------------------
-# Sidebar: Company selection
-# -------------------------------
-st.sidebar.header("Choose companies to compare:")
-selected_companies = [c for c in companies if st.sidebar.checkbox(c, True)]
+scores_2030 = {
+    "Xiaomi": [8, 7, 6, 7, 9, 6],      # more balanced but hardware-heavy
+    "Ecobee": [6, 10, 8, 9, 8, 9],     # stronger in energy + personalization
+    "iSmartHome": [7, 8, 7, 6, 7, 8],  # small growth
+    "Tuya": [8, 9, 8, 10, 9, 9]        # dominant interoperability
+}
 
 # -------------------------------
-# Radar Chart with Fixed Colors
+# Sidebar Controls
 # -------------------------------
-# RGBA with alpha for fill, hex for lines
+st.sidebar.header("Dashboard Controls")
+
+scenario = st.sidebar.radio("Select Scenario:", ["2024", "2030"])
+scores = scores_2024 if scenario == "2024" else scores_2030
+
+selected_companies = [c for c in scores if st.sidebar.checkbox(c, True)]
+
+# -------------------------------
+# Colors
+# -------------------------------
 colors = {
     "Xiaomi": {"fill": "rgba(47,128,237,0.3)", "line": "#2F80ED"},       # Blue
     "Ecobee": {"fill": "rgba(39,174,96,0.3)", "line": "#27AE60"},        # Green
@@ -72,14 +76,17 @@ colors = {
     "Tuya": {"fill": "rgba(235,87,87,0.3)", "line": "#EB5757"}           # Red
 }
 
+# -------------------------------
+# Radar Chart
+# -------------------------------
 fig = go.Figure()
 
 for company in selected_companies:
     fig.add_trace(go.Scatterpolar(
-        r=companies[company] + [companies[company][0]],  # close loop
+        r=scores[company] + [scores[company][0]],  # close loop
         theta=dimensions + [dimensions[0]],
         fill='toself',
-        fillcolor=colors[company]["fill"],   # Semi-transparent fill
+        fillcolor=colors[company]["fill"],
         line=dict(color=colors[company]["line"], width=3),
         name=company
     ))
@@ -88,10 +95,39 @@ fig.update_layout(
     polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
     showlegend=True,
     template="plotly_white",
-    title="Value Curve Comparison (Readable Colors)"
+    title=f"Value Curve Comparison ({scenario})"
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+# -------------------------------
+# Insights Panel
+# -------------------------------
+insights = {
+    "Xiaomi": "Excels in affordability and ecosystem breadth, but lags in security.",
+    "Ecobee": "Strongest in energy savings and growing in personalization; service-led.",
+    "iSmartHome": "Localized convenience player in UAE, but scalability is limited.",
+    "Tuya": "Leads interoperability and acts as a neutral platform enabler for 8,400+ brands."
+}
+
+if selected_companies:
+    st.subheader("Company Insights")
+    for company in selected_companies:
+        st.markdown(f"**{company}:** {insights[company]}")
+
+# -------------------------------
+# Export as PNG
+# -------------------------------
+st.subheader("Export Options")
+
+buffer = io.BytesIO()
+fig.write_image(buffer, format="png")
+st.download_button(
+    label="📥 Download Radar Chart as PNG",
+    data=buffer,
+    file_name=f"value_curve_{scenario}.png",
+    mime="image/png"
+)
 
 # -------------------------------
 # Footer
