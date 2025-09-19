@@ -62,21 +62,14 @@ st.sidebar.header("Choose companies to compare:")
 selected_companies = [c for c in companies if st.sidebar.checkbox(c, True)]
 
 # -------------------------------
-# Radar Chart with Improved Colors
+# Radar Chart with Fixed Colors
 # -------------------------------
-# Define RGBA colors for transparency
+# RGBA with alpha for fill, hex for lines
 colors = {
-    "Xiaomi": "rgba(47,128,237,0.5)",     # Blue
-    "Ecobee": "rgba(39,174,96,0.5)",      # Green
-    "iSmartHome": "rgba(242,201,76,0.5)", # Yellow-Gold
-    "Tuya": "rgba(235,87,87,0.5)"         # Red
-}
-
-line_colors = {
-    "Xiaomi": "rgb(47,128,237)",
-    "Ecobee": "rgb(39,174,96)",
-    "iSmartHome": "rgb(242,201,76)",
-    "Tuya": "rgb(235,87,87)"
+    "Xiaomi": {"fill": "rgba(47,128,237,0.3)", "line": "#2F80ED"},       # Blue
+    "Ecobee": {"fill": "rgba(39,174,96,0.3)", "line": "#27AE60"},        # Green
+    "iSmartHome": {"fill": "rgba(242,201,76,0.3)", "line": "#F2C94C"},   # Yellow
+    "Tuya": {"fill": "rgba(235,87,87,0.3)", "line": "#EB5757"}           # Red
 }
 
 fig = go.Figure()
@@ -86,8 +79,8 @@ for company in selected_companies:
         r=companies[company] + [companies[company][0]],  # close loop
         theta=dimensions + [dimensions[0]],
         fill='toself',
-        fillcolor=colors[company],   # semi-transparent fill
-        line=dict(color=line_colors[company], width=3),
+        fillcolor=colors[company]["fill"],   # Semi-transparent fill
+        line=dict(color=colors[company]["line"], width=3),
         name=company
     ))
 
