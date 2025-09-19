@@ -134,29 +134,26 @@ readiness_data = pd.DataFrame({
 }, index=["Tuya", "Ecobee", "Xiaomi", "iSmartHome"])
 
 fig, ax = plt.subplots(figsize=(8, 4))
-sns.heatmap(readiness_data, annot=True, cmap="YlGnBu", linewidths=.5, ax=ax)
+
+# Use red-yellow-green colormap (RdYlGn), reversed so high=green
+sns.heatmap(
+    readiness_data,
+    annot=True,
+    cmap="RdYlGn",
+    linewidths=.5,
+    ax=ax,
+    vmin=0, vmax=10,  # ensures consistent scale
+    cbar_kws={'label': 'Readiness Score'}
+)
+
 st.pyplot(fig)
 
 st.markdown("""
 **Interpretation:**  
 - Tuya and Ecobee show high readiness due to compliance, interoperability, and energy services.  
-- Xiaomi is medium — strong in affordability and ecosystem breadth but hardware-heavy.  
-- iSmartHome is medium-low, innovative locally but struggling with scale.  
+- Xiaomi is medium, strong in affordability and ecosystem breadth but hardware-heavy.  
+- iSmartHome is medium-low, innovative locally but lacking scalability.  
 """)
-
-# -------------------------------
-# Export Options
-# -------------------------------
-st.subheader("Export Options")
-
-# Export as HTML (interactive)
-fig_json = fig.to_json()
-st.download_button(
-    label="📥 Download Radar Chart (Interactive HTML)",
-    data=fig_json,
-    file_name=f"value_curve_{scenario}.html",
-    mime="application/json"
-)
 
 # Export as CSV (scores)
 import pandas as pd
