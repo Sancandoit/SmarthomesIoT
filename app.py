@@ -62,13 +62,14 @@ st.sidebar.header("Choose companies to compare:")
 selected_companies = [c for c in companies if st.sidebar.checkbox(c, True)]
 
 # -------------------------------
-# Radar Chart with Custom Colors
+# Radar Chart with Improved Colors
 # -------------------------------
+# Distinct colors for visibility (aligned with PPT palette, plus yellow & red for contrast)
 colors = {
-    "Xiaomi": "#2F80ED",        # Blue
-    "Ecobee": "#27AE60",        # Green
-    "iSmartHome": "#BDBDBD",    # Grey
-    "Tuya": "#000000"           # Black
+    "Xiaomi": "#2F80ED",       # Bright Blue
+    "Ecobee": "#27AE60",       # Green
+    "iSmartHome": "#F2C94C",   # Yellow-Gold
+    "Tuya": "#EB5757"          # Red
 }
 
 fig = go.Figure()
@@ -78,15 +79,16 @@ for company in selected_companies:
         r=companies[company] + [companies[company][0]],  # close loop
         theta=dimensions + [dimensions[0]],
         fill='toself',
-        name=company,
-        line=dict(color=colors[company], width=3)
+        fillcolor=colors[company] + "33",   # Add transparency (~20%)
+        line=dict(color=colors[company], width=3),
+        name=company
     ))
 
 fig.update_layout(
     polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
     showlegend=True,
     template="plotly_white",
-    title="Value Curve Comparison"
+    title="Value Curve Comparison (Readable Colors)"
 )
 
 st.plotly_chart(fig, use_container_width=True)
